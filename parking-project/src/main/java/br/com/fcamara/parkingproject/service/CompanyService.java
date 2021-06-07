@@ -5,6 +5,7 @@ import br.com.fcamara.parkingproject.model.Company;
 
 import br.com.fcamara.parkingproject.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,20 +17,24 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public Company create(CompanyForm form) {
+    public ResponseEntity<Company> create(CompanyForm form) {
         Optional<Company> cnpj = companyRepository.findByCnpj(form.getCnpj());
 
         // Verificar se cnpj, já não está cadastrado
         if (!cnpj.isPresent()) {
+
             Company company = new Company(form.getName(), form.getCnpj(), form.getTel());
-            return companyRepository.save(company);
+
+            Company save = companyRepository.save(company);
+
+            return ResponseEntity.ok(save);
         }
 
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
 
-    public Company update(long id, CompanyForm form) {
+    public ResponseEntity<Company> update(long id, CompanyForm form) {
         Optional<Company> optional = companyRepository.findById(id);
 
         if (optional.isPresent()) {
@@ -39,12 +44,10 @@ public class CompanyService {
             company.setName(form.getName());
             company.setTel(form.getTel());
 
-            return company;
+            return ResponseEntity.ok(company);
 
         }
 
-        return null;
-
-
+        return ResponseEntity.badRequest().build();
     }
 }

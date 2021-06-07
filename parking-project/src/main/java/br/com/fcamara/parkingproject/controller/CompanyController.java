@@ -23,27 +23,12 @@ public class CompanyController {
     @PostMapping
     @Transactional
     public ResponseEntity<Company> add(@RequestBody @Valid CompanyForm form) {
-        Company company = companyService.create(form);
-
-        if(company != null) {
-            return ResponseEntity.ok(company);
-        }
-
-        return ResponseEntity.badRequest().build();
-
+        return companyService.create(form);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Company> edit
-            (@PathVariable long id, @RequestBody @Valid CompanyForm form) {
-
-        Company company = companyService.update(id, form);
-
-        if(company != null) {
-            return ResponseEntity.ok(company);
-        }
-
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<Company> edit(@PathVariable long id, @RequestBody @Valid CompanyForm form) {
+        return companyService.update(id, form);
     }
 }
