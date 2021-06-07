@@ -27,4 +27,24 @@ public class CompanyService {
 
         return null;
     }
+
+
+    public Company update(long id, CompanyForm form) {
+        Optional<Company> optional = companyRepository.findById(id);
+
+        if (optional.isPresent()) {
+            Company company = companyRepository.getById(id);
+
+            company.setCnpj(form.getCnpj());
+            company.setName(form.getName());
+            company.setTel(form.getTel());
+
+            return company;
+
+        }
+
+        return null;
+
+
+    }
 }
