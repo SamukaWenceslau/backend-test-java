@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @ToString
 @EqualsAndHashCode(of = { "id" })
+@NoArgsConstructor
 public class Company {
 
     @Id

@@ -7,6 +7,8 @@ import br.com.fcamara.parkingproject.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class CompanyService {
@@ -15,8 +17,14 @@ public class CompanyService {
     private CompanyRepository companyRepository;
 
     public Company create(CompanyForm form) {
-        Company company = new Company(form.getName(), form.getCnpj(), form.getTel());
+        Optional<Company> cnpj = companyRepository.findByCnpj(form.getCnpj());
 
-        return companyRepository.save(company);
+        // Verificar se cnpj, já não está cadastrado
+        if (!cnpj.isPresent()) {
+            Company company = new Company(form.getName(), form.getCnpj(), form.getTel());
+            return companyRepository.save(company);
+        }
+
+        return null;
     }
 }

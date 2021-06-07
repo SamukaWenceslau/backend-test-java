@@ -6,6 +6,7 @@ import br.com.fcamara.parkingproject.controller.form.CompanyForm;
 import br.com.fcamara.parkingproject.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -19,9 +20,16 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping
-    public Company create(@RequestBody @Valid CompanyForm form) {
+    public ResponseEntity<Company> create(@RequestBody @Valid CompanyForm form) {
 
-        return companyService.create(form);
+        Company company = companyService.create(form);
+
+        if(company != null) {
+            return ResponseEntity.ok(company);
+        }
+
+        return ResponseEntity.badRequest().build();
+
     }
 
 }
