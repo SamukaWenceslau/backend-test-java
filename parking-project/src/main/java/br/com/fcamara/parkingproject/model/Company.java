@@ -3,6 +3,8 @@ package br.com.fcamara.parkingproject.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -21,6 +23,9 @@ public class Company {
     private String name;
     private String cnpj;
     private String tel;
+
+    @OneToMany(mappedBy = "company")
+    private List<Address> addresses = new ArrayList<>();
 
     public Company(String name, String cnpj, String tel) {
         this.name = name;
