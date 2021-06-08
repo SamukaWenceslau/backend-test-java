@@ -17,6 +17,19 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+
+    public ResponseEntity<Company> show(Long id) {
+        Optional<Company> company = companyRepository.findById(id);
+
+        if(company.isPresent()){
+            return ResponseEntity.ok(company.get());
+        }
+
+        return ResponseEntity.notFound().build();
+
+    }
+
+
     public ResponseEntity<Company> create(CompanyForm form) {
         Optional<Company> cnpj = companyRepository.findByCnpj(form.getCnpj());
 

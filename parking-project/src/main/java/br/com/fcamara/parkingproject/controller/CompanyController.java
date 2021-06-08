@@ -20,6 +20,11 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Company> list(@PathVariable long id) {
+        return companyService.show(id);
+    }
+
     @PostMapping
     @Transactional
     public ResponseEntity<Company> add(@RequestBody @Valid CompanyForm form) {
