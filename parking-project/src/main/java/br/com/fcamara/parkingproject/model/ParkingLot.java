@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class ParkingLot {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "motocycle_spaces")
@@ -24,7 +24,6 @@ public class ParkingLot {
     private Integer carSpaces;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
     @JoinColumn(name = "address_id")
     private Address address;
 

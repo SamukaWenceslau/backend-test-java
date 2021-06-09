@@ -6,11 +6,10 @@ import br.com.fcamara.parkingproject.model.Address;
 
 import br.com.fcamara.parkingproject.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
@@ -20,8 +19,16 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AddressDto> listOne(@PathVariable long id) {
+        return addressService.show(id);
+    }
+
     @PostMapping
-    public AddressDto add(@RequestBody @Valid AddressForm form) {
+    @Transactional
+    public ResponseEntity<AddressDto> add(@RequestBody @Valid AddressForm form) {
         return addressService.create(form);
     }
+    
+
 }

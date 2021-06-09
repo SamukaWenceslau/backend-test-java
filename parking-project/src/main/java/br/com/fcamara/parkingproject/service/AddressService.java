@@ -10,6 +10,7 @@ import br.com.fcamara.parkingproject.repository.CompanyRepository;
 import br.com.fcamara.parkingproject.utils.AddressConvertTo;
 import br.com.fcamara.parkingproject.utils.ParkingLotConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class AddressService {
     @Autowired
     ParkingLotService parkingLotService;
 
+    // Utils
     private final AddressConvertTo addressConvertTo;
     private final ParkingLotConvertTo parkingLotConvertTo;
 
@@ -37,19 +39,36 @@ public class AddressService {
         this.parkingLotConvertTo = new ParkingLotConvertTo();
     }
 
-    public AddressDto create(AddressForm form) {
+    public ResponseEntity<AddressDto> show(long id) {
+
+        Optional<Address> address = addressRepository.findById(id);
+
+        if(address.isPresent()) {
+            return ResponseEntity.ok(addressConvertTo.convertToDto(address.get()));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity<AddressDto> create(AddressForm form) {
 
         Optional<Company> company = companyRepository.findById(1L);
 
-        Address address = addressConvertTo.convertToAddress(form, company.get());
+        if (company.isPresent()) {
+            Address address = addressConvertTo.convertToAddress(form, company.get());
 
-        ParkingLot parkingLot = parkingLotConvertTo.convertToParkingLot(form, address);
+            ParkingLot parkingLot = parkingLotConvertTo.convertToParkingLot(form, address);
 
-        parkingLotService.create(parkingLot);
+            parkingLotService.create(parkingLot);
 
-        return new AddressDto(addressRepository.save(address));
+            return ResponseEntity.ok(addressConvertTo.convertToDto(addressRepository.save(address)));
+        }
+
+        return ResponseEntity.badRequest().build();
 
     }
+
+
 
 
 }

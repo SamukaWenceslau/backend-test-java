@@ -1,5 +1,6 @@
 package br.com.fcamara.parkingproject.utils;
 
+import br.com.fcamara.parkingproject.controller.dto.AddressDto;
 import br.com.fcamara.parkingproject.controller.form.AddressForm;
 import br.com.fcamara.parkingproject.model.Address;
 import br.com.fcamara.parkingproject.model.Company;
@@ -23,4 +24,7 @@ public class AddressConvertTo {
         return address;
     }
 
+    public AddressDto convertToDto(Address address) {
+        return new AddressDto(address);
+    }
 }
