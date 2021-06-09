@@ -31,7 +31,7 @@ public class Address {
     @OneToOne(mappedBy = "address")
     private ParkingLot parkingLot;
 
-    public Address(String street, String neighborhood, int number, String city,
+    public Address(String street, String neighborhood, Integer number, String city,
                    String state, String zip, String name) {
         this.street = street;
         this.neighborhood = neighborhood;

@@ -7,6 +7,8 @@ import br.com.fcamara.parkingproject.model.Company;
 import br.com.fcamara.parkingproject.model.ParkingLot;
 import br.com.fcamara.parkingproject.repository.AddressRepository;
 import br.com.fcamara.parkingproject.repository.CompanyRepository;
+import br.com.fcamara.parkingproject.utils.AddressConvertTo;
+import br.com.fcamara.parkingproject.utils.ParkingLotConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,42 +18,36 @@ import java.util.Optional;
 @Service
 public class AddressService {
 
-    //Repositories
-
+    // Repositories
     @Autowired
     CompanyRepository companyRepository;
 
     @Autowired
     AddressRepository addressRepository;
 
-    //Services
-
+    // Services
     @Autowired
     ParkingLotService parkingLotService;
 
+    private final AddressConvertTo addressConvertTo;
+    private final ParkingLotConvertTo parkingLotConvertTo;
+
+    public AddressService() {
+        this.addressConvertTo = new AddressConvertTo();
+        this.parkingLotConvertTo = new ParkingLotConvertTo();
+    }
 
     public AddressDto create(AddressForm form) {
 
         Optional<Company> company = companyRepository.findById(1L);
 
-        Address address = new Address(
-                form.getStreet(),
-                form.getNeighborhood(),
-                form.getNumber(),
-                form.getCity(),
-                form.getState(),
-                form.getZip(),
-                form.getName());
+        Address address = addressConvertTo.convertToAddress(form, company.get());
 
-        address.setCompany(company.get());
+        ParkingLot parkingLot = parkingLotConvertTo.convertToParkingLot(form, address);
 
-        ParkingLot parkingLot = new ParkingLot(form.getMotocycleSpaces(), form.getCarSpaces());
-        parkingLot.setAddress(address);
-
-        Address save = addressRepository.save(address);
         parkingLotService.create(parkingLot);
 
-        return new AddressDto(save);
+        return new AddressDto(addressRepository.save(address));
 
     }
 
