@@ -21,7 +21,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> list(@PathVariable long id) {
+    public ResponseEntity<Company> list(@PathVariable Long id) {
         return companyService.show(id);
     }
 
@@ -33,7 +33,7 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Company> edit(@PathVariable long id, @RequestBody @Valid CompanyForm form) {
+    public ResponseEntity<Company> edit(@PathVariable Long id, @RequestBody @Valid CompanyForm form) {
         return companyService.update(id, form);
     }
 }

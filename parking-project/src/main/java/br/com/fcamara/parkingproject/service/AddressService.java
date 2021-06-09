@@ -39,7 +39,7 @@ public class AddressService {
         this.parkingLotConvertTo = new ParkingLotConvertTo();
     }
 
-    public ResponseEntity<AddressDto> show(long id) {
+    public ResponseEntity<AddressDto> show(Long id) {
 
         Optional<Address> address = addressRepository.findById(id);
 
@@ -50,6 +50,7 @@ public class AddressService {
         return ResponseEntity.notFound().build();
     }
 
+    // Cria endereço e patio
     public ResponseEntity<AddressDto> create(AddressForm form) {
 
         Optional<Company> company = companyRepository.findById(1L);
@@ -68,7 +69,29 @@ public class AddressService {
 
     }
 
+    // Atualizar endereço e patio
+    public ResponseEntity<AddressDto> update(Long id,AddressForm form) {
+        Optional<Address> optional = addressRepository.findById(id);
 
+        if (optional.isPresent()) {
+            Address address = addressRepository.getById(id);
 
+            address.setName(form.getName());
+            address.setStreet(form.getStreet());
+            address.setNeighborhood(form.getNeighborhood());
+            address.setNumber(form.getNumber());
+            address.setCity(form.getCity());
+            address.setState(form.getState());
+            address.setZip(form.getZip());
 
+            parkingLotService.update(form, address);
+
+            return ResponseEntity.ok().build();
+
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    
 }

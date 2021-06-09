@@ -20,7 +20,7 @@ public class AddressController {
     private AddressService addressService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressDto> listOne(@PathVariable long id) {
+    public ResponseEntity<AddressDto> listOne(@PathVariable Long id) {
         return addressService.show(id);
     }
 
@@ -29,6 +29,11 @@ public class AddressController {
     public ResponseEntity<AddressDto> add(@RequestBody @Valid AddressForm form) {
         return addressService.create(form);
     }
-    
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<AddressDto> edit(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
+        return addressService.update(id, form);
+    }
 
 }
