@@ -18,18 +18,27 @@ public class Address {
     private Long id;
     private String street;
     private String neighborhood;
-    private int number;
+    private Integer number;
     private String city;
     private String state;
     private String zip;
     private String name;
 
     @ManyToOne
-    @JoinColumn(name="company_id", referencedColumnName = "id")
+    @JoinColumn(name="company_id")
     private Company company;
 
-    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "address")
     private ParkingLot parkingLot;
 
-
+    public Address(String street, String neighborhood, int number, String city,
+                   String state, String zip, String name) {
+        this.street = street;
+        this.neighborhood = neighborhood;
+        this.number = number;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.name = name;
+    }
 }

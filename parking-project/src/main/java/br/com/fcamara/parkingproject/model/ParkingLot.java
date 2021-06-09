@@ -16,12 +16,21 @@ public class ParkingLot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private int motocycle_spaces;
-    private int car_spaces;
 
-    @OneToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @Column(name = "motocycle_spaces")
+    private Integer motocycleSpaces;
+
+    @Column(name = "car_spaces")
+    private Integer carSpaces;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "address_id")
     private Address address;
 
+    public ParkingLot(int motocycleSpaces, int carSpaces) {
+        this.motocycleSpaces = motocycleSpaces;
+        this.carSpaces = carSpaces;
+    }
 }
 
