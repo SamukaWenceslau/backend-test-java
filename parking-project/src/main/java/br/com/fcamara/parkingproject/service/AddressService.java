@@ -50,7 +50,7 @@ public class AddressService {
         return ResponseEntity.notFound().build();
     }
 
-    // Cria endereço e patio
+    // Criar -> endereço e patio
     public ResponseEntity<AddressDto> create(AddressForm form) {
 
         Optional<Company> company = companyRepository.findById(1L);
@@ -65,11 +65,11 @@ public class AddressService {
             return ResponseEntity.ok(addressConvertTo.convertToDto(addressRepository.save(address)));
         }
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
 
     }
 
-    // Atualizar endereço e patio
+    // Atualizar -> endereço e patio
     public ResponseEntity<AddressDto> update(Long id,AddressForm form) {
         Optional<Address> optional = addressRepository.findById(id);
 
@@ -90,8 +90,18 @@ public class AddressService {
 
         }
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 
-    
+    // Deletar -> endereço e patio
+    public ResponseEntity<?> delete(Long id) {
+        Optional<Address> optional = addressRepository.findById(id);
+
+        if(optional.isPresent()) {
+            addressRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 }

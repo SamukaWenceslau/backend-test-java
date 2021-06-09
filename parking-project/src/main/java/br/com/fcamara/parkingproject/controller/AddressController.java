@@ -36,4 +36,10 @@ public class AddressController {
         return addressService.update(id, form);
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> remove(@PathVariable Long id) {
+        return addressService.delete(id);
+    }
+
 }

@@ -29,7 +29,7 @@ public class Address {
     @JoinColumn(name="company_id")
     private Company company;
 
-    @OneToOne(mappedBy = "address")
+    @OneToOne(mappedBy = "address", orphanRemoval = true)
     private ParkingLot parkingLot;
 
     public Address(String street, String neighborhood, Integer number, String city,
