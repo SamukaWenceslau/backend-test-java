@@ -1,9 +1,12 @@
 package br.com.fcamara.parkingproject.service;
 
+import br.com.fcamara.parkingproject.controller.dto.CompanyDto;
+import br.com.fcamara.parkingproject.controller.dto.DetailCompanyDto;
 import br.com.fcamara.parkingproject.controller.form.CompanyForm;
 import br.com.fcamara.parkingproject.model.Company;
 
 import br.com.fcamara.parkingproject.repository.CompanyRepository;
+import br.com.fcamara.parkingproject.utils.CompanyConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,12 +20,19 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    // Utils
+    private final CompanyConvertTo companyConvertTo;
 
-    public ResponseEntity<Company> show(Long id) {
+    public CompanyService() {
+        this.companyConvertTo = new CompanyConvertTo();
+    }
+
+
+    public ResponseEntity<DetailCompanyDto> show(Long id) {
         Optional<Company> company = companyRepository.findById(id);
 
         if(company.isPresent()){
-            return ResponseEntity.ok(company.get());
+            return ResponseEntity.ok(new DetailCompanyDto(company.get()));
         }
 
         return ResponseEntity.notFound().build();
@@ -30,7 +40,7 @@ public class CompanyService {
     }
 
 
-    public ResponseEntity<Company> create(CompanyForm form) {
+    public ResponseEntity<CompanyDto> create(CompanyForm form) {
         Optional<Company> cnpj = companyRepository.findByCnpj(form.getCnpj());
 
         // Verificar se cnpj, já não está cadastrado
@@ -40,14 +50,14 @@ public class CompanyService {
 
             Company save = companyRepository.save(company);
 
-            return ResponseEntity.ok(save);
+            return ResponseEntity.ok(companyConvertTo.companyDto(save));
         }
 
         return ResponseEntity.badRequest().build();
     }
 
 
-    public ResponseEntity<Company> update(long id, CompanyForm form) {
+    public ResponseEntity<CompanyDto> update(long id, CompanyForm form) {
         Optional<Company> optional = companyRepository.findById(id);
 
         if (optional.isPresent()) {
@@ -57,7 +67,7 @@ public class CompanyService {
             company.setName(form.getName());
             company.setTel(form.getTel());
 
-            return ResponseEntity.ok(company);
+            return ResponseEntity.ok(companyConvertTo.companyDto(company));
 
         }
 

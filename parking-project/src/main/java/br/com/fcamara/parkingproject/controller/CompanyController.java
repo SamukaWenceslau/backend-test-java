@@ -1,6 +1,7 @@
 package br.com.fcamara.parkingproject.controller;
 
-
+import br.com.fcamara.parkingproject.controller.dto.CompanyDto;
+import br.com.fcamara.parkingproject.controller.dto.DetailCompanyDto;
 import br.com.fcamara.parkingproject.model.Company;
 import br.com.fcamara.parkingproject.controller.form.CompanyForm;
 import br.com.fcamara.parkingproject.service.CompanyService;
@@ -21,19 +22,19 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> list(@PathVariable Long id) {
+    public ResponseEntity<DetailCompanyDto> list(@PathVariable Long id) {
         return companyService.show(id);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Company> add(@RequestBody @Valid CompanyForm form) {
+    public ResponseEntity<CompanyDto> add(@RequestBody @Valid CompanyForm form) {
         return companyService.create(form);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Company> edit(@PathVariable Long id, @RequestBody @Valid CompanyForm form) {
+    public ResponseEntity<CompanyDto> edit(@PathVariable Long id, @RequestBody @Valid CompanyForm form) {
         return companyService.update(id, form);
     }
 }
