@@ -28,22 +28,11 @@ public class CompanyService {
     }
 
 
-    public ResponseEntity<DetailCompanyDto> index(Long id) {
+    public ResponseEntity<DetailCompanyDto> show(Long id) {
         Optional<Company> company = companyRepository.findById(id);
 
         if(company.isPresent()){
             return ResponseEntity.ok(new DetailCompanyDto(company.get()));
-        }
-
-        return ResponseEntity.notFound().build();
-    }
-
-
-    public ResponseEntity<CompanyDto> show(Long id) {
-        Optional<Company> company = companyRepository.findById(id);
-
-        if(company.isPresent()){
-            return ResponseEntity.ok(companyConvertTo.companyDto(company.get()));
         }
 
         return ResponseEntity.notFound().build();
@@ -84,6 +73,4 @@ public class CompanyService {
 
         return ResponseEntity.badRequest().build();
     }
-
-
 }
