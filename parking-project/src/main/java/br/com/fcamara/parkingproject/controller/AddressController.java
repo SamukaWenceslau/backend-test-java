@@ -24,10 +24,10 @@ public class AddressController {
         return addressService.show(id);
     }
 
-    @PostMapping
+    @PostMapping("/company/{id}")
     @Transactional
-    public ResponseEntity<AddressDto> add(@RequestBody @Valid AddressForm form) {
-        return addressService.create(form);
+    public ResponseEntity<AddressDto> add(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
+        return addressService.create(id, form);
     }
 
     @PutMapping("/{id}")

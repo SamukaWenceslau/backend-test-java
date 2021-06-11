@@ -51,9 +51,9 @@ public class AddressService {
     }
 
     // Criar -> endereço e patio
-    public ResponseEntity<AddressDto> create(AddressForm form) {
+    public ResponseEntity<AddressDto> create(Long id, AddressForm form) {
 
-        Optional<Company> company = companyRepository.findById(1L);
+        Optional<Company> company = companyRepository.findById(id);
 
         if (company.isPresent()) {
             Address address = addressConvertTo.convertToAddress(form, company.get());
@@ -70,7 +70,7 @@ public class AddressService {
     }
 
     // Atualizar -> endereço e patio
-    public ResponseEntity<AddressDto> update(Long id,AddressForm form) {
+    public ResponseEntity<AddressDto> update(Long id, AddressForm form) {
         Optional<Address> optional = addressRepository.findById(id);
 
         if (optional.isPresent()) {
