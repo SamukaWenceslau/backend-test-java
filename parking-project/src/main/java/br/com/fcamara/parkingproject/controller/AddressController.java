@@ -28,19 +28,19 @@ public class AddressController {
 
     @PostMapping("/company/{id}")
     @Transactional
-    public ResponseEntity<AddressDto> add(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
+    public ResponseEntity<AddressDto> addAddress(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
         return addressService.create(id, form);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<AddressDto> edit(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
+    public ResponseEntity<AddressDto> editAddress(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
         return addressService.update(id, form);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> remove(@PathVariable Long id) {
+    public ResponseEntity<?> removeAddress(@PathVariable Long id) {
         return addressService.delete(id);
     }
 
