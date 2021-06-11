@@ -22,8 +22,13 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<DetailCompanyDto> list(@PathVariable Long id) {
+    public ResponseEntity<CompanyDto> showCompany(@PathVariable Long id) {
         return companyService.show(id);
+    }
+
+    @GetMapping("/{id}/addresses")
+    public ResponseEntity<DetailCompanyDto> listCompanyAndAddresses(@PathVariable Long id) {
+        return companyService.index(id);
     }
 
     @PostMapping
