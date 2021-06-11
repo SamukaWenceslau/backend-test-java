@@ -22,7 +22,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<DetailCompanyDto> list(@PathVariable Long id) {
+    public ResponseEntity<CompanyDto> list(@PathVariable Long id) {
         return companyService.show(id);
     }
 

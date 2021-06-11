@@ -28,11 +28,11 @@ public class CompanyService {
     }
 
 
-    public ResponseEntity<DetailCompanyDto> show(Long id) {
+    public ResponseEntity<CompanyDto> show(Long id) {
         Optional<Company> company = companyRepository.findById(id);
 
         if(company.isPresent()){
-            return ResponseEntity.ok(new DetailCompanyDto(company.get()));
+            return ResponseEntity.ok(companyConvertTo.companyDto(company.get()));
         }
 
         return ResponseEntity.notFound().build();
