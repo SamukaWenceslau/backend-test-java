@@ -1,6 +1,7 @@
 package br.com.fcamara.parkingproject.service;
 
 import br.com.fcamara.parkingproject.controller.dto.AddressDto;
+import br.com.fcamara.parkingproject.controller.dto.CompanyAddressesDto;
 import br.com.fcamara.parkingproject.controller.form.AddressForm;
 import br.com.fcamara.parkingproject.model.Address;
 import br.com.fcamara.parkingproject.model.Company;
@@ -37,6 +38,16 @@ public class AddressService {
     public AddressService() {
         this.addressConvertTo = new AddressConvertTo();
         this.parkingLotConvertTo = new ParkingLotConvertTo();
+    }
+
+    public ResponseEntity<CompanyAddressesDto> index(Long id) {
+        Optional<Company> company = companyRepository.findById(id);
+
+        if (company.isPresent()) {
+            return ResponseEntity.ok(new CompanyAddressesDto(company.get()));
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<AddressDto> show(Long id) {
@@ -104,4 +115,6 @@ public class AddressService {
 
         return ResponseEntity.notFound().build();
     }
+
+
 }

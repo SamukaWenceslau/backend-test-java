@@ -1,8 +1,6 @@
 package br.com.fcamara.parkingproject.controller;
 
 import br.com.fcamara.parkingproject.controller.dto.CompanyDto;
-import br.com.fcamara.parkingproject.controller.dto.DetailCompanyDto;
-import br.com.fcamara.parkingproject.model.Company;
 import br.com.fcamara.parkingproject.controller.form.CompanyForm;
 import br.com.fcamara.parkingproject.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;

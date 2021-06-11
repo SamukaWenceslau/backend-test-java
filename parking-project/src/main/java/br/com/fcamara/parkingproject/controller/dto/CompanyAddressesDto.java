@@ -9,21 +9,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class DetailCompanyDto {
+public class CompanyAddressesDto {
 
-    private Long id;
-    private String name;
+    private long company_id;
+    private String company_name;
     private List<AddressDto> addresses = new ArrayList<>();
 
-    public DetailCompanyDto(Company company) {
-        this.id = company.getId();
-        this.name = company.getName();
+    public CompanyAddressesDto(Company company) {
+        this.company_id = company.getId();
+        this.company_name = company.getName();
         this.addresses.addAll(company.getAddresses().stream().map(AddressDto::new)
                 .collect(Collectors.toList()));
     }
-
-
-
-
-
 }

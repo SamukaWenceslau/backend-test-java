@@ -1,6 +1,7 @@
 package br.com.fcamara.parkingproject.controller;
 
 import br.com.fcamara.parkingproject.controller.dto.AddressDto;
+import br.com.fcamara.parkingproject.controller.dto.CompanyAddressesDto;
 import br.com.fcamara.parkingproject.controller.form.AddressForm;
 import br.com.fcamara.parkingproject.model.Address;
 
@@ -20,9 +21,10 @@ public class AddressController {
     private AddressService addressService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressDto> listOne(@PathVariable Long id) {
+    public ResponseEntity<AddressDto> showAddress(@PathVariable Long id) {
         return addressService.show(id);
     }
+
 
     @PostMapping("/company/{id}")
     @Transactional
