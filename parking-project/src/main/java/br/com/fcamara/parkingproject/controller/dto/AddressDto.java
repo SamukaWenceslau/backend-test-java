@@ -15,7 +15,7 @@ public class AddressDto {
     private String state;
     private String zip;
     private String name;
-
+    private ParkingLotDto parking_lot;
 
     public AddressDto(Address address) {
         this.id = address.getId();
@@ -26,5 +26,6 @@ public class AddressDto {
         this.state = address.getState();
         this.zip = address.getZip();
         this.name = address.getName();
+        this.parking_lot = new ParkingLotDto(address.getParkingLot());
     }
 }

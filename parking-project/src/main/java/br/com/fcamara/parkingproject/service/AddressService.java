@@ -55,7 +55,7 @@ public class AddressService {
         Optional<Address> address = addressRepository.findById(id);
 
         if(address.isPresent()) {
-            return ResponseEntity.ok(addressConvertTo.convertToDto(address.get()));
+            return ResponseEntity.ok(new AddressDto(address.get()));
         }
 
         return ResponseEntity.notFound().build();
@@ -70,10 +70,12 @@ public class AddressService {
             Address address = addressConvertTo.convertToAddress(form, company.get());
 
             ParkingLot parkingLot = parkingLotConvertTo.convertToParkingLot(form, address);
-
             parkingLotService.create(parkingLot);
 
-            return ResponseEntity.ok(addressConvertTo.convertToDto(addressRepository.save(address)));
+            addressRepository.save(address);
+            address.setParkingLot(parkingLot);
+
+            return ResponseEntity.ok(addressConvertTo.convertToDto((address)));
         }
 
         return ResponseEntity.notFound().build();
