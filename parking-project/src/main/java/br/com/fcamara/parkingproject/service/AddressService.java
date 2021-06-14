@@ -65,8 +65,9 @@ public class AddressService {
     public ResponseEntity<AddressDto> create(Long id, AddressForm form) {
 
         Optional<Company> company = companyRepository.findById(id);
+        Boolean existsZip = addressRepository.existsByZip(form.getZip());
 
-        if (company.isPresent()) {
+        if (company.isPresent() && !existsZip) {
             Address address = addressConvertTo.convertToAddress(form, company.get());
 
             ParkingLot parkingLot = parkingLotConvertTo.convertToParkingLot(form, address);
@@ -84,9 +85,9 @@ public class AddressService {
 
     // Atualizar -> endereço e patio
     public ResponseEntity<AddressDto> update(Long id, AddressForm form) {
-        Optional<Address> optional = addressRepository.findById(id);
+        Boolean optional = addressRepository.existsById(id);
 
-        if (optional.isPresent()) {
+        if (optional) {
             Address address = addressRepository.getById(id);
 
             address.setName(form.getName());
@@ -108,9 +109,9 @@ public class AddressService {
 
     // Deletar -> endereço e patio
     public ResponseEntity<?> delete(Long id) {
-        Optional<Address> optional = addressRepository.findById(id);
+        Boolean optional = addressRepository.existsById(id);
 
-        if(optional.isPresent()) {
+        if(optional) {
             addressRepository.deleteById(id);
             return ResponseEntity.ok().build();
         }
