@@ -40,10 +40,10 @@ public class CompanyService {
 
 
     public ResponseEntity<CompanyDto> create(CompanyForm form) {
-        Optional<Company> cnpj = companyRepository.findByCnpj(form.getCnpj());
+        Boolean existCnpj = companyRepository.existsByCnpj(form.getCnpj());
 
         // Verificar se cnpj, já não está cadastrado
-        if (!cnpj.isPresent()) {
+        if (!existCnpj) {
 
             Company company = new Company(form.getName(), form.getCnpj(), form.getTel());
 
@@ -57,9 +57,9 @@ public class CompanyService {
 
 
     public ResponseEntity<CompanyDto> update(long id, CompanyForm form) {
-        Optional<Company> optional = companyRepository.findById(id);
+        Boolean optional = companyRepository.existsById(id);
 
-        if (optional.isPresent()) {
+        if (optional) {
             Company company = companyRepository.getById(id);
 
             company.setCnpj(form.getCnpj());
