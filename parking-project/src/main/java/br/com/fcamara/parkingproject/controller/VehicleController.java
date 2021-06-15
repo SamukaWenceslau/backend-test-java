@@ -1,5 +1,7 @@
 package br.com.fcamara.parkingproject.controller;
 
+import br.com.fcamara.parkingproject.controller.dto.VehicleDto;
+import br.com.fcamara.parkingproject.controller.form.UpdateVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
 import br.com.fcamara.parkingproject.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,19 @@ public class VehicleController {
 
 
     @PostMapping
-    public ResponseEntity<?> addVehicle(@RequestBody @Valid VehicleForm form) {
+    public ResponseEntity<VehicleDto> addVehicle(@RequestBody @Valid VehicleForm form) {
 
         return vehicleService.create(form);
 
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleDto> editVehicle(@PathVariable Long id, @RequestBody @Valid UpdateVehicleForm form) {
+        return vehicleService.update(id, form);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeVehicle(@PathVariable Long id) {
+        return vehicleService.delete(id);
+    }
 }
