@@ -27,4 +27,18 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType vehicle;
 
+    public Vehicle(String brand, String model, String color, String licensePlate, String vehicle) {
+        this.brand = brand;
+        this.model = model;
+        this.color = color;
+        this.licensePlate = licensePlate;
+        this.vehicle = converterStringToVehicleType(vehicle);
+    }
+
+
+    private VehicleType converterStringToVehicleType(String value) {
+        VehicleType vehicleType = VehicleType.valueOf(value.toUpperCase());
+        return vehicleType;
+    }
+
 }
