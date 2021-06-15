@@ -9,12 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    public ResponseEntity<VehicleDto> show(Long id) {
+        Optional<Vehicle> vehicle = vehicleRepository.findById(id);
+
+        if(vehicle.isPresent()) {
+            return ResponseEntity.ok(new VehicleDto(vehicle.get()));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 
     public ResponseEntity<VehicleDto> create(VehicleForm form) {
 
@@ -66,4 +77,5 @@ public class VehicleService {
 
         return ResponseEntity.notFound().build();
     }
+
 }

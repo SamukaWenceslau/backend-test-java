@@ -17,6 +17,10 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleDto> showVehile(@PathVariable Long id) {
+        return vehicleService.show(id);
+    }
 
     @PostMapping
     public ResponseEntity<VehicleDto> addVehicle(@RequestBody @Valid VehicleForm form) {
