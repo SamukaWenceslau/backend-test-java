@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
@@ -18,11 +19,12 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleDto> showVehile(@PathVariable Long id) {
+    public ResponseEntity<VehicleDto> showVehicle(@PathVariable Long id) {
         return vehicleService.show(id);
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<VehicleDto> addVehicle(@RequestBody @Valid VehicleForm form) {
 
         return vehicleService.create(form);
@@ -30,11 +32,13 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity<VehicleDto> editVehicle(@PathVariable Long id, @RequestBody @Valid UpdateVehicleForm form) {
         return vehicleService.update(id, form);
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> removeVehicle(@PathVariable Long id) {
         return vehicleService.delete(id);
     }

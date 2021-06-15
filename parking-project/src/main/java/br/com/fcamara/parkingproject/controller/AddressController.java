@@ -23,7 +23,6 @@ public class AddressController {
         return addressService.show(id);
     }
 
-
     @PostMapping("/company/{id}")
     @Transactional
     public ResponseEntity<AddressDto> addAddress(@PathVariable Long id, @RequestBody @Valid AddressForm form) {

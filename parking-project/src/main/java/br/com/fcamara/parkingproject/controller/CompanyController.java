@@ -20,19 +20,19 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDto> list(@PathVariable Long id) {
+    public ResponseEntity<CompanyDto> showCompany(@PathVariable Long id) {
         return companyService.show(id);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CompanyDto> add(@RequestBody @Valid CompanyForm form) {
+    public ResponseEntity<CompanyDto> addCompany(@RequestBody @Valid CompanyForm form) {
         return companyService.create(form);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<CompanyDto> edit(@PathVariable Long id, @RequestBody @Valid CompanyForm form) {
+    public ResponseEntity<CompanyDto> editCompany(@PathVariable Long id, @RequestBody @Valid CompanyForm form) {
         return companyService.update(id, form);
     }
 }
