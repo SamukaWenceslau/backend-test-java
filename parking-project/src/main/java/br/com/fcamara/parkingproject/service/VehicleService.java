@@ -1,12 +1,11 @@
 package br.com.fcamara.parkingproject.service;
 
 import br.com.fcamara.parkingproject.controller.dto.VehicleDto;
+import br.com.fcamara.parkingproject.controller.form.RegisterVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.UpdateVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
 import br.com.fcamara.parkingproject.model.ParkingLot;
-import br.com.fcamara.parkingproject.model.ParkingManager;
 import br.com.fcamara.parkingproject.model.Vehicle;
-import br.com.fcamara.parkingproject.model.VehicleStatus;
 import br.com.fcamara.parkingproject.repository.ParkingLotRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,32 +36,6 @@ public class VehicleService {
         }
 
         return ResponseEntity.notFound().build();
-    }
-
-    public ResponseEntity<VehicleDto> createNewVehicle(Long id, VehicleForm form) {
-
-        Optional<ParkingLot> parkingLot = parkingLotRepository.findById(id);
-        Boolean existsVehicle = vehicleRepository.existsByLicensePlate(form.getLicensePlate());
-
-        if(parkingLot.isPresent()) {
-            if (!existsVehicle){
-                Vehicle vehicle = new Vehicle(
-                        form.getBrand(),
-                        form.getModel(),
-                        form.getColor(),
-                        form.getLicensePlate(),
-                        form.getVehicleType()
-                );
-
-                parkingManagerService.registerEntrance(parkingLot.get(), vehicle);
-                vehicleRepository.save(vehicle);
-
-                return ResponseEntity.ok(new VehicleDto(vehicle));
-            }
-        }
-
-        return ResponseEntity.badRequest().build();
-
     }
 
     public ResponseEntity<VehicleDto> update(Long id, UpdateVehicleForm form) {

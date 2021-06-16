@@ -14,6 +14,7 @@ public class ParkingManagerService {
     private ParkingManagerRepository parkingManagerRepository;
 
 
+    
     public void registerEntrance(ParkingLot parkingLot, Vehicle vehicle) {
         ParkingManager parkingVehicle = new ParkingManager(parkingLot, vehicle);
         parkingManagerRepository.save(parkingVehicle);

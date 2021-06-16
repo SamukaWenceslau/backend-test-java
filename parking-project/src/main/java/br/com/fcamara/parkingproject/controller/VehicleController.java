@@ -23,12 +23,6 @@ public class VehicleController {
         return vehicleService.show(id);
     }
 
-    @PostMapping("/parkinglot/{id}")
-    @Transactional
-    public ResponseEntity<VehicleDto> addVehicle(@PathVariable Long id, @RequestBody @Valid VehicleForm form) {
-        return vehicleService.createNewVehicle(id, form);
-    }
-
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<VehicleDto> editVehicle(@PathVariable Long id, @RequestBody @Valid UpdateVehicleForm form) {
