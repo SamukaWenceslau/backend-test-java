@@ -3,9 +3,14 @@ package br.com.fcamara.parkingproject.service;
 import br.com.fcamara.parkingproject.controller.dto.VehicleDto;
 import br.com.fcamara.parkingproject.controller.form.UpdateVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
+import br.com.fcamara.parkingproject.model.ParkingLot;
+import br.com.fcamara.parkingproject.model.ParkingManager;
 import br.com.fcamara.parkingproject.model.Vehicle;
+import br.com.fcamara.parkingproject.model.VehicleStatus;
+import br.com.fcamara.parkingproject.repository.ParkingLotRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +22,13 @@ public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private ParkingManagerService parkingManagerService;
+
+
     public ResponseEntity<VehicleDto> show(Long id) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
 
@@ -27,23 +39,26 @@ public class VehicleService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<VehicleDto> create(VehicleForm form) {
+    public ResponseEntity<VehicleDto> createNewVehicle(Long id, VehicleForm form) {
 
-        Boolean existsLicensePlate = vehicleRepository.existsByLicensePlate(form.getLicensePlate());
+        Optional<ParkingLot> parkingLot = parkingLotRepository.findById(id);
+        Boolean existsVehicle = vehicleRepository.existsByLicensePlate(form.getLicensePlate());
 
-        if(!existsLicensePlate) {
-            Vehicle vehicle = new Vehicle(
-                    form.getBrand(),
-                    form.getModel(),
-                    form.getColor(),
-                    form.getLicensePlate(),
-                    form.getVehicleType()
-            );
+        if(parkingLot.isPresent()) {
+            if (!existsVehicle){
+                Vehicle vehicle = new Vehicle(
+                        form.getBrand(),
+                        form.getModel(),
+                        form.getColor(),
+                        form.getLicensePlate(),
+                        form.getVehicleType()
+                );
 
-            Vehicle save = vehicleRepository.save(vehicle);
+                parkingManagerService.registerEntrance(parkingLot.get(), vehicle);
+                vehicleRepository.save(vehicle);
 
-            return ResponseEntity.ok(new VehicleDto(save));
-
+                return ResponseEntity.ok(new VehicleDto(vehicle));
+            }
         }
 
         return ResponseEntity.badRequest().build();

@@ -24,17 +24,19 @@ public class ParkingManager {
     @JoinColumn(name = "parkinglot_id")
     private ParkingLot parkingLot;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     private LocalDateTime entrance = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
-    private LocalDateTime exit = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+    private LocalDateTime exit;
 
     @Enumerated(EnumType.STRING)
     private VehicleStatus status = VehicleStatus.ESTACIONADO;
 
 
-
-
+    public ParkingManager(ParkingLot parkingLot, Vehicle vehicle) {
+        this.parkingLot = parkingLot;
+        this.vehicle = vehicle;
+    }
 }
