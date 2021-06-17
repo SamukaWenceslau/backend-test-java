@@ -28,4 +28,10 @@ public class ParkingManagerController {
         return parkingManagerService.registerNew(form);
     }
 
+    @PutMapping("/register/vehicle/{id}")
+    @Transactional
+    public ResponseEntity<?> registerVehicleExit(@PathVariable Long id) {
+        return parkingManagerService.registerExit(id);
+    }
+
 }

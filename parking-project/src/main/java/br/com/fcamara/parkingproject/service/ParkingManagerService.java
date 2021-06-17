@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -54,23 +56,44 @@ public class ParkingManagerService {
 
         return ResponseEntity.badRequest().build();
     }
+    
+
+    public ResponseEntity<?> registerExit(Long id) {
+        Optional<Vehicle> vehicle = vehicleRepository.findById(id);
+
+        if (vehicle.isPresent()) {
+            Optional<ParkingManager> parkingVechile = parkingManagerRepository
+                    .findByVehicleAndStatus(vehicle.get(), VehicleStatus.ESTACIONADO);
+
+            if(parkingVechile.isPresent()) {
+
+                parkingVechile.get().setExit(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+                parkingVechile.get().setStatus(VehicleStatus.ESTACIONOU);
+
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+
+        }
+
+        return ResponseEntity.notFound().build();
+
+    }
+
+
 
     private Boolean entranceValidate(Optional<Address> address, Optional<Vehicle> vehicle) {
 
         if(address.isPresent() && vehicle.isPresent()) {
 
-            Optional<ParkingManager> optional = parkingManagerRepository
+            Optional<ParkingManager> isParking = parkingManagerRepository
                     .findByVehicleAndStatus(vehicle.get(), VehicleStatus.ESTACIONADO);
 
-            if (!optional.isPresent()) {
-                return true;
-            }else {
-                return false;
-            }
+            return (!isParking.isPresent()) ? true : false;
         }
 
         return false;
 
     }
+
 
 }
