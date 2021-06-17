@@ -1,8 +1,6 @@
 package br.com.fcamara.parkingproject.controller.form;
 
 
-import br.com.fcamara.parkingproject.controller.annotation.EnumTypeIsValid;
-import br.com.fcamara.parkingproject.model.VehicleType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,19 +13,12 @@ import javax.validation.constraints.Size;
 @Setter
 public class VehicleForm {
 
-    @NotNull @NotEmpty @Size(min = 2)
-    private String brand;
-
-    @NotNull @NotEmpty @Size(min = 2)
-    private String model;
-
-    @NotNull @NotEmpty @Size(min = 2)
-    private String color;
-
-    @NotNull @NotEmpty @Size(max = 8)
+    @NotNull @NotEmpty @Size(min = 7, max = 8)
     private String licensePlate;
 
-    @EnumTypeIsValid(enumClass = VehicleType.class)
-    private String vehicleType;
+    @NotNull @NotEmpty @Size(min = 8, max = 9)
+    private String zip;
+
+
 
 }

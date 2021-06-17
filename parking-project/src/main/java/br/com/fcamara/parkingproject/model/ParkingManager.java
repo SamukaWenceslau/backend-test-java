@@ -21,8 +21,8 @@ public class ParkingManager {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parkinglot_id")
-    private ParkingLot parkingLot;
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @OneToOne
     @JoinColumn(name = "vehicle_id")
@@ -35,8 +35,8 @@ public class ParkingManager {
     private VehicleStatus status = VehicleStatus.ESTACIONADO;
 
 
-    public ParkingManager(ParkingLot parkingLot, Vehicle vehicle) {
-        this.parkingLot = parkingLot;
+    public ParkingManager(Address address, Vehicle vehicle) {
+        this.address = address;
         this.vehicle = vehicle;
     }
 }

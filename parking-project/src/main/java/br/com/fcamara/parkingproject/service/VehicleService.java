@@ -1,15 +1,11 @@
 package br.com.fcamara.parkingproject.service;
 
 import br.com.fcamara.parkingproject.controller.dto.VehicleDto;
-import br.com.fcamara.parkingproject.controller.form.RegisterVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.UpdateVehicleForm;
-import br.com.fcamara.parkingproject.controller.form.VehicleForm;
-import br.com.fcamara.parkingproject.model.ParkingLot;
 import br.com.fcamara.parkingproject.model.Vehicle;
 import br.com.fcamara.parkingproject.repository.ParkingLotRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
