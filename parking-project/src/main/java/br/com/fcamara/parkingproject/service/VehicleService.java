@@ -1,6 +1,7 @@
 package br.com.fcamara.parkingproject.service;
 
 import br.com.fcamara.parkingproject.controller.dto.VehicleDto;
+import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.UpdateVehicleForm;
 import br.com.fcamara.parkingproject.model.Vehicle;
 import br.com.fcamara.parkingproject.repository.ParkingLotRepository;
@@ -32,6 +33,27 @@ public class VehicleService {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    public Optional<Vehicle> create(NewVehicleForm form) {
+        boolean existsVehicle = vehicleRepository.existsByLicensePlate(form.getLicensePlate());
+        Optional<Vehicle> createdVehicle = Optional.empty();
+
+        if (!existsVehicle) {
+            Vehicle vehicle = new Vehicle(
+                    form.getBrand(),
+                    form.getModel(),
+                    form.getColor(),
+                    form.getLicensePlate(),
+                    form.getVehicleType());
+
+            vehicleRepository.save(vehicle);
+
+            createdVehicle = Optional.of(vehicle);
+        }
+
+        return createdVehicle;
+
     }
 
     public ResponseEntity<VehicleDto> update(Long id, UpdateVehicleForm form) {

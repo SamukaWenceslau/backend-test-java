@@ -1,11 +1,9 @@
 package br.com.fcamara.parkingproject.service;
 
 import br.com.fcamara.parkingproject.controller.dto.AddressDto;
+import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
-import br.com.fcamara.parkingproject.model.Address;
-import br.com.fcamara.parkingproject.model.ParkingLot;
-import br.com.fcamara.parkingproject.model.ParkingManager;
-import br.com.fcamara.parkingproject.model.Vehicle;
+import br.com.fcamara.parkingproject.model.*;
 import br.com.fcamara.parkingproject.repository.AddressRepository;
 import br.com.fcamara.parkingproject.repository.ParkingManagerRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
@@ -21,10 +19,10 @@ public class ParkingManagerService {
 
     @Autowired
     private ParkingManagerRepository parkingManagerRepository;
-
     @Autowired
     private VehicleRepository vehicleRepository;
-
+    @Autowired
+    private VehicleService vehicleService;
     @Autowired
     private AddressRepository addressRepository;
 
@@ -34,9 +32,8 @@ public class ParkingManagerService {
         Optional<Address> address = addressRepository.findByZip(form.getZip());
         Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(form.getLicensePlate());
 
-        if (address.isPresent() && vehicle.isPresent()) {
-            ParkingManager vehicleEntrance = new ParkingManager(address.get(), vehicle.get());
-            parkingManagerRepository.save(vehicleEntrance);
+        if (entranceValidate(address, vehicle)) {
+            parkingManagerRepository.save(new ParkingManager(address.get(), vehicle.get()));
 
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
@@ -45,6 +42,35 @@ public class ParkingManagerService {
 
     }
 
+    public ResponseEntity<?> registerNew(NewVehicleForm form) {
+        Optional<Address> address = addressRepository.findByZip(form.getZip());
+        Optional<Vehicle> createdVehicle = vehicleService.create(form);
 
+        if (address.isPresent() && createdVehicle.isPresent()) {
+            parkingManagerRepository.save(new ParkingManager(address.get(), createdVehicle.get()));
+
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    private Boolean entranceValidate(Optional<Address> address, Optional<Vehicle> vehicle) {
+
+        if(address.isPresent() && vehicle.isPresent()) {
+
+            Optional<ParkingManager> optional = parkingManagerRepository
+                    .findByVehicleAndStatus(vehicle.get(), VehicleStatus.ESTACIONADO);
+
+            if (!optional.isPresent()) {
+                return true;
+            }else {
+                return false;
+            }
+        }
+
+        return false;
+
+    }
 
 }

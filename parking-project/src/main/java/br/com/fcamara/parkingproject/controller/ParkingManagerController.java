@@ -1,5 +1,6 @@
 package br.com.fcamara.parkingproject.controller;
 
+import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
 import br.com.fcamara.parkingproject.service.ParkingManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class ParkingManagerController {
     public ResponseEntity<?> registerVehicleEntrance(@RequestBody VehicleForm form) {
         return parkingManagerService.register(form);
     }
-    
+
+    @PostMapping("/register/new-vehicle")
+    @Transactional
+    public ResponseEntity<?> registerNewVehicleEntrance(@RequestBody NewVehicleForm form) {
+        return parkingManagerService.registerNew(form);
+    }
 
 }
