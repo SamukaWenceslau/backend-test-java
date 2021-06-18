@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Table
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = { "id" })
 @NoArgsConstructor
 public class Address {
@@ -44,5 +43,18 @@ public class Address {
         this.state = state;
         this.zip = zip;
         this.name = name;
+    }
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", number=" + number +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zip='" + zip + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

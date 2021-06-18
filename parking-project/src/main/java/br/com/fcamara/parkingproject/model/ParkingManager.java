@@ -11,7 +11,6 @@ import java.util.List;
 @Table
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = { "id" })
 @NoArgsConstructor
 public class ParkingManager {
@@ -38,5 +37,15 @@ public class ParkingManager {
     public ParkingManager(Address address, Vehicle vehicle) {
         this.address = address;
         this.vehicle = vehicle;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingManager{" +
+                "id=" + id +
+                ", entrance=" + entrance +
+                ", exit=" + exit +
+                ", status=" + status +
+                '}';
     }
 }

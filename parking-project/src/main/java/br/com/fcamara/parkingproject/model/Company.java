@@ -11,7 +11,6 @@ import java.util.List;
 @Table
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = { "id" })
 @NoArgsConstructor
 public class Company {
@@ -33,4 +32,13 @@ public class Company {
         this.tel = tel;
     }
 
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cnpj='" + cnpj + '\'' +
+                ", tel='" + tel + '\'' +
+                '}';
+    }
 }

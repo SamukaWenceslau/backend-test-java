@@ -34,10 +34,10 @@ public class AddressForm {
     private String zip;
 
     @NotNull
-    private Integer motocycleSpaces;
+    private Long motocycleSpaces;
 
     @NotNull
-    private Integer carSpaces;
+    private Long carSpaces;
 
 
 

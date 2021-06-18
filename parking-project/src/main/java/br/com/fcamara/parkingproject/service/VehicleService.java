@@ -35,11 +35,8 @@ public class VehicleService {
         return ResponseEntity.notFound().build();
     }
 
-    public Optional<Vehicle> create(NewVehicleForm form) {
-        boolean existsVehicle = vehicleRepository.existsByLicensePlate(form.getLicensePlate());
-        Optional<Vehicle> createdVehicle = Optional.empty();
+    public Vehicle create(NewVehicleForm form) {
 
-        if (!existsVehicle) {
             Vehicle vehicle = new Vehicle(
                     form.getBrand(),
                     form.getModel(),
@@ -49,11 +46,7 @@ public class VehicleService {
 
             vehicleRepository.save(vehicle);
 
-            createdVehicle = Optional.of(vehicle);
-        }
-
-        return createdVehicle;
-
+            return vehicle;
     }
 
     public ResponseEntity<VehicleDto> update(Long id, UpdateVehicleForm form) {

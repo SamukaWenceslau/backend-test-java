@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Table(name = "parking_lot")
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = { "id" })
 @NoArgsConstructor
 public class ParkingLot {
@@ -18,18 +17,27 @@ public class ParkingLot {
     private Long id;
 
     @Column(name = "motocycle_spaces")
-    private Integer motocycleSpaces;
+    private Long motocycleSpaces;
 
     @Column(name = "car_spaces")
-    private Integer carSpaces;
+    private Long carSpaces;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    public ParkingLot(int motocycleSpaces, int carSpaces) {
+    public ParkingLot(Long motocycleSpaces, Long carSpaces) {
         this.motocycleSpaces = motocycleSpaces;
         this.carSpaces = carSpaces;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingLot{" +
+                "id=" + id +
+                ", motocycleSpaces=" + motocycleSpaces +
+                ", carSpaces=" + carSpaces +
+                '}';
     }
 }
 

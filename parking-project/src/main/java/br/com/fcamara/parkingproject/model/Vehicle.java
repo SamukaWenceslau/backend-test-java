@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Table
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = { "id" })
 @NoArgsConstructor
 public class Vehicle {
@@ -27,6 +26,9 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType vehicle;
 
+    @OneToOne(mappedBy = "vehicle")
+    private ParkingManager parkingManager;
+
     public Vehicle(String brand, String model, String color, String licensePlate, String vehicle) {
         this.brand = brand;
         this.model = model;
@@ -41,4 +43,15 @@ public class Vehicle {
         return vehicleType;
     }
 
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", color='" + color + '\'' +
+                ", licensePlate='" + licensePlate + '\'' +
+                ", vehicle=" + vehicle +
+                '}';
+    }
 }

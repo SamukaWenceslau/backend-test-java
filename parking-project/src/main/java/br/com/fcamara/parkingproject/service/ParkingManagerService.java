@@ -52,22 +52,35 @@ public class ParkingManagerService {
         Optional<Address> address = addressRepository.findByZip(form.getZip());
         Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(form.getLicensePlate());
 
-        if (entranceValidate(address, vehicle)) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(save(address.get(), vehicle.get()));
+        if (address.isPresent() && vehicle.isPresent()) {
+            if (entranceValidate(address.get(), vehicle.get())) {
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(save(address.get(), vehicle.get()));
+            }
         }
 
         return ResponseEntity.notFound().build();
 
     }
 
-    public ResponseEntity<ParkingManagerDto> registerNew(NewVehicleForm form) {
+    public ResponseEntity<?> registerNew(NewVehicleForm form) {
         Optional<Address> address = addressRepository.findByZip(form.getZip());
-        Optional<Vehicle> createdVehicle = vehicleService.create(form);
+        Boolean existsVehicle = vehicleRepository.existsByLicensePlate(form.getLicensePlate());
 
-        if (address.isPresent() && createdVehicle.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(save(address.get(), createdVehicle.get()));
+        if (address.isPresent() && !existsVehicle) {
+
+            Vehicle vehicle = vehicleService.create(form);
+
+            if (hasSpace(address.get(), vehicle)){
+
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(save(address.get(), vehicle));
+            }else{
+
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body("Veículo cadastrado, porém não foi possivel estaciona-lo. Pois o não há espaço");
+
+            }
         }
 
         return ResponseEntity.badRequest().build();
@@ -94,6 +107,8 @@ public class ParkingManagerService {
 
     }
 
+
+
     private ParkingManagerDto save(Address address, Vehicle vehicle) {
         ParkingManager save = parkingManagerRepository.save(new ParkingManager(address, vehicle));
 
@@ -101,20 +116,43 @@ public class ParkingManagerService {
     }
 
 
+    private Boolean entranceValidate(Address address, Vehicle vehicle) {
 
-
-    private Boolean entranceValidate(Optional<Address> address, Optional<Vehicle> vehicle) {
-
-        if(address.isPresent() && vehicle.isPresent()) {
-
-            Optional<ParkingManager> isParking = parkingManagerRepository
-                    .findByVehicleAndStatus(vehicle.get(), VehicleStatus.ESTACIONADO);
-
-            return (!isParking.isPresent()) ? true : false;
+        if(!isParked(vehicle) && hasSpace(address, vehicle)) {
+            return true;
         }
 
         return false;
+    }
 
+    private boolean isParked(Vehicle vehicle) {
+        Optional<ParkingManager> isParked = parkingManagerRepository
+                .findByVehicleAndStatus(vehicle, VehicleStatus.ESTACIONADO);
+
+        return (isParked.isPresent()) ? true : false;
+
+    }
+
+    private boolean hasSpace(Address address, Vehicle vehicle) {
+//        List<ParkingManager> allParkedVehicle = parkingManagerRepository
+//                .findAll(Specification.where(SpecificationParkingManager.address(address.getId()))
+//                        .and(SpecificationParkingManager.spaceLimit(vehicle.getVehicle())));
+
+        List<ParkingManager> allManagerVehicle = parkingManagerRepository.findAllManagerVehicle();
+
+        allManagerVehicle
+                .stream()
+                .filter(e -> e.getVehicle().equals(vehicle.getVehicle()) && e.getStatus().equals(VehicleStatus.ESTACIONADO) &&
+                        e.getAddress().getId().equals(address.getId())).count();
+
+        Long carSpaces = address.getParkingLot().getCarSpaces();
+        Long motocycleSpaces = address.getParkingLot().getMotocycleSpaces();
+
+        if (vehicle.getVehicle().equals(VehicleType.CARRO)) {
+            return (allManagerVehicle.size() == carSpaces.intValue()) ? false : true;
+        }else {
+            return (allManagerVehicle.size() == motocycleSpaces.intValue()) ? false : true;
+        }
     }
 
 
