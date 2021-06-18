@@ -32,6 +32,9 @@ public class Address {
     @OneToOne(mappedBy = "address", orphanRemoval = true)
     private ParkingLot parkingLot;
 
+    @OneToOne
+    private ParkingManager parkingManager;
+
     public Address(String street, String neighborhood, Integer number, String city,
                    String state, String zip, String name) {
         this.street = street;

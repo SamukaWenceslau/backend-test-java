@@ -1,5 +1,6 @@
 package br.com.fcamara.parkingproject.controller;
 
+import br.com.fcamara.parkingproject.controller.dto.ParkingManagerDto;
 import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
 import br.com.fcamara.parkingproject.service.ParkingManagerService;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/manager")
@@ -15,6 +18,11 @@ public class ParkingManagerController {
 
     @Autowired
     private ParkingManagerService parkingManagerService;
+
+    @GetMapping("/address/{id}")
+    public List<ParkingManagerDto> list(@PathVariable Long id) {
+        return parkingManagerService.index(id);
+    }
 
     @PostMapping("/register/vehicle")
     @Transactional
