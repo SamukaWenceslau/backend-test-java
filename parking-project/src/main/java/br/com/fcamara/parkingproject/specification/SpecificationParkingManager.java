@@ -12,20 +12,28 @@ import javax.persistence.criteria.*;
 public class SpecificationParkingManager {
 
     public static Specification<ParkingManager> address(Long id) {
+
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("address"), id);
+
     }
 
-    public static Specification<ParkingManager> spaceLimit(VehicleType vehicleType) {
+    public static Specification<ParkingManager> vehicleStatus(String vehicleStatus) {
         return new Specification<ParkingManager>() {
             @Override
             public Predicate toPredicate(Root<ParkingManager> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-                Join<ParkingManager, Vehicle> parkingManagerJoinVehicle = root.join("vehicle");
-                Predicate status = criteriaBuilder.equal(parkingManagerJoinVehicle.get("status"), VehicleStatus.ESTACIONADO);
-                Predicate parkedVehicle = criteriaBuilder.equal(parkingManagerJoinVehicle.get("vehicle"), vehicleType);
+                Predicate statusIsParked = criteriaBuilder.equal(root.get("status"), VehicleStatus.ESTACIONADO);
+                Predicate statusWasParked = criteriaBuilder.equal(root.get("status"), VehicleStatus.ESTACIONOU);
 
-                return criteriaBuilder.and(parkedVehicle, status);
+                String upperVehicleStatus = vehicleStatus.toUpperCase();
+                if(upperVehicleStatus.equals("ESTACIONADO") || upperVehicleStatus.equals("ESTACIONOU")) {
+                    VehicleStatus status = VehicleStatus.valueOf(upperVehicleStatus);
+                    return criteriaBuilder.equal(root.get("status"), status);
+                }else {
+                    return criteriaBuilder.or(statusIsParked, statusWasParked);
+                }
+
             }
         };
     }

@@ -37,16 +37,13 @@ public class VehicleService {
 
     public Vehicle create(NewVehicleForm form) {
 
-            Vehicle vehicle = new Vehicle(
+            return vehicleRepository.save(new Vehicle(
                     form.getBrand(),
                     form.getModel(),
                     form.getColor(),
                     form.getLicensePlate(),
-                    form.getVehicleType());
+                    form.getVehicleType()));
 
-            vehicleRepository.save(vehicle);
-
-            return vehicle;
     }
 
     public ResponseEntity<VehicleDto> update(Long id, UpdateVehicleForm form) {

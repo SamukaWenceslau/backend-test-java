@@ -10,6 +10,8 @@ import br.com.fcamara.parkingproject.repository.ParkingManagerRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
 import br.com.fcamara.parkingproject.specification.SpecificationParkingManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,22 +43,42 @@ public class ParkingManagerService {
     private AddressRepository addressRepository;
 
 
+    public Page<ParkingManagerDto> index(Long id, Pageable page) {
 
-    public List<ParkingManagerDto> index(Long id) {
         boolean existsAddress = addressRepository.existsById(id);
 
         if (existsAddress) {
-            List<ParkingManager> allParkedVehicle = parkingManagerRepository
-                    .findAll(Specification.where(
-                            SpecificationParkingManager.address(id)
-                    ));
+            Page<ParkingManager> allParkedVehicle = parkingManagerRepository
+                    .findAll(Specification.where(SpecificationParkingManager.address(id)), page);
 
-            return allParkedVehicle.stream().map(ParkingManagerDto::new).collect(Collectors.toList());
+
+            return allParkedVehicle.map(ParkingManagerDto::new);
         }
 
         return null;
 
     }
+
+    public Page<ParkingManagerDto> index(Long id, Pageable page, String status) {
+
+        boolean existsAddress = addressRepository.existsById(id);
+
+        if (existsAddress) {
+
+            Page<ParkingManager> allParkedVehicle = parkingManagerRepository
+                    .findAll(Specification.where(
+                            SpecificationParkingManager.address(id))
+                            .and(SpecificationParkingManager.vehicleStatus(status))
+                            , page);
+
+
+            return allParkedVehicle.map(ParkingManagerDto::new);
+        }
+
+        return null;
+
+    }
+
 
     public ResponseEntity<Object> register(VehicleForm form) {
 
@@ -140,7 +162,6 @@ public class ParkingManagerService {
         return new ParkingManagerDto(save);
     }
 
-
     private Boolean entranceValidate(Address address, Vehicle vehicle) {
 
         if(!isParked(vehicle) && hasSpace(address, vehicle)) {
@@ -159,15 +180,13 @@ public class ParkingManagerService {
     }
 
     private boolean hasSpace(Address address, Vehicle vehicle) {
-//        List<ParkingManager> allParkedVehicle = parkingManagerRepository
-//                .findAll(Specification.where(SpecificationParkingManager.address(address.getId()))
-//                        .and(SpecificationParkingManager.spaceLimit(vehicle.getVehicle())));
 
         List<ParkingManager> allManagerVehicle = parkingManagerRepository.findAllManagerVehicle();
 
         allManagerVehicle
                 .stream()
-                .filter(e -> e.getVehicle().equals(vehicle.getVehicle()) && e.getStatus().equals(VehicleStatus.ESTACIONADO) &&
+                .filter(e -> e.getVehicle().equals(vehicle.getVehicle()) &&
+                        e.getStatus().equals(VehicleStatus.ESTACIONADO) &&
                         e.getAddress().getId().equals(address.getId())).count();
 
         Long carSpaces = address.getParkingLot().getCarSpaces();

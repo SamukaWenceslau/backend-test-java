@@ -5,6 +5,10 @@ import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
 import br.com.fcamara.parkingproject.service.ParkingManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +24,15 @@ public class ParkingManagerController {
     private ParkingManagerService parkingManagerService;
 
     @GetMapping("/address/{id}")
-    public List<ParkingManagerDto> list(@PathVariable Long id) {
-        return parkingManagerService.index(id);
+    public Page<ParkingManagerDto> list(@PathVariable Long id,
+                                        @RequestParam(required = false) String status,
+                                        @PageableDefault(sort = "entrance", direction = Sort.Direction.ASC)
+                                        Pageable page) {
+        if (status == null) {
+            return parkingManagerService.index(id, page);
+        }else{
+            return parkingManagerService.index(id, page, status);
+        }
     }
 
     @PostMapping("/register/vehicle")
