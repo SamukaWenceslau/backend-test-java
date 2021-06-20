@@ -3,6 +3,7 @@ package br.com.fcamara.parkingproject.service;
 import br.com.fcamara.parkingproject.controller.dto.ParkingManagerDto;
 import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
+import br.com.fcamara.parkingproject.exception.ApiRequestException;
 import br.com.fcamara.parkingproject.model.*;
 import br.com.fcamara.parkingproject.repository.AddressRepository;
 import br.com.fcamara.parkingproject.repository.ParkingManagerRepository;
@@ -39,12 +40,18 @@ public class ParkingManagerService {
 
 
     public List<ParkingManagerDto> index(Long id) {
-        List<ParkingManager> allParkedVehicle = parkingManagerRepository
-                .findAll(Specification.where(
-                        SpecificationParkingManager.address(id)
-                ));
+        boolean existsAddress = addressRepository.existsById(id);
 
-        return allParkedVehicle.stream().map(ParkingManagerDto::new).collect(Collectors.toList());
+        if (existsAddress) {
+            List<ParkingManager> allParkedVehicle = parkingManagerRepository
+                    .findAll(Specification.where(
+                            SpecificationParkingManager.address(id)
+                    ));
+
+            return allParkedVehicle.stream().map(ParkingManagerDto::new).collect(Collectors.toList());
+        }
+
+        throw new ApiRequestException("Endereço não encontrado.");
     }
 
     public ResponseEntity<ParkingManagerDto> register(VehicleForm form) {
