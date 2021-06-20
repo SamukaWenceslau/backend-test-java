@@ -4,6 +4,7 @@ package br.com.fcamara.parkingproject.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table
@@ -26,14 +27,14 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType vehicle;
 
-    @OneToOne(mappedBy = "vehicle")
-    private ParkingManager parkingManager;
+    @OneToMany(mappedBy = "vehicle")
+    private List<ParkingManager> parkingManager;
 
     public Vehicle(String brand, String model, String color, String licensePlate, String vehicle) {
         this.brand = brand;
         this.model = model;
         this.color = color;
-        this.licensePlate = licensePlate;
+        this.licensePlate = licensePlate.toUpperCase();
         this.vehicle = converterStringToVehicleType(vehicle);
     }
 

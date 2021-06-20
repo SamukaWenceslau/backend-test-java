@@ -23,7 +23,7 @@ public class ParkingManager {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
