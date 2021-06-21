@@ -3,6 +3,7 @@ package br.com.fcamara.parkingproject.model;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class Company implements UserDetails {
     public Company(String name, String email, String password, String cnpj, String tel) {
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt(10));
         this.cnpj = cnpj;
         this.tel = tel;
     }
@@ -47,6 +48,8 @@ public class Company implements UserDetails {
         return "Company{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", cnpj='" + cnpj + '\'' +
                 ", tel='" + tel + '\'' +
                 '}';

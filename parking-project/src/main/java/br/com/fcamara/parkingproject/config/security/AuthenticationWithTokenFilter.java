@@ -40,7 +40,7 @@ public class AuthenticationWithTokenFilter extends OncePerRequestFilter {
     private void clientAuthenticate(String token) {
         Long companyId = tokenService.getCompanyId(token);
 
-        Company company = repository.getById(companyId);
+        Company company = repository.findById(companyId).get();
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken
                 (company, null, company.getAuthorities());
