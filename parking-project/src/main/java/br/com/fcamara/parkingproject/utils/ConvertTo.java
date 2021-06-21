@@ -10,14 +10,18 @@ import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.exception.ApiException;
 import br.com.fcamara.parkingproject.model.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public class ConvertTo {
 
 
     // Metodos para - Company
+
     public static Company company(CompanyForm form) {
         return new Company(
                 form.getName(),
+                form.getEmail(),
+                form.getPassword(),
                 form.getCnpj(),
                 form.getTel()
         );
@@ -28,8 +32,8 @@ public class ConvertTo {
     }
 
 
-
     // Metodos para - Address
+
     public static Address address(AddressForm form, Company company) {
 
         Address address = new Address(
@@ -46,11 +50,12 @@ public class ConvertTo {
         return address;
     }
 
-
     public static AddressDto addressDto(Address address) {
         return new AddressDto(address);
     }
 
+
+    // Metodo para - ParkingLot
 
     public static ParkingLot parkingLot(AddressForm form, Address address) {
 
@@ -87,6 +92,15 @@ public class ConvertTo {
         return new ParkingManagerDto(parkingManager);
     }
 
+
+
+
+    // Outros
+
+    public static UsernamePasswordAuthenticationToken
+    usernamePasswordAuthenticationToken(String email, String password) {
+        return new UsernamePasswordAuthenticationToken(email, password);
+    }
 
     public static ApiException apiException(String message, HttpStatus status) {
         return new ApiException(message, status);

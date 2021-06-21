@@ -7,12 +7,14 @@ import lombok.Getter;
 public class CompanyDto {
     private Long id;
     private String name;
+    private String email;
     private String cnpj;
     private String tel;
 
     public CompanyDto(Company company) {
         this.id = company.getId();
         this.name = company.getName();
+        this.email = company.getEmail();
         this.cnpj = company.getCnpj();
         this.tel = company.getTel();
     }
