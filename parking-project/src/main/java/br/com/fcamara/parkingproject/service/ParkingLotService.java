@@ -4,13 +4,14 @@ import br.com.fcamara.parkingproject.controller.form.AddressForm;
 import br.com.fcamara.parkingproject.model.Address;
 import br.com.fcamara.parkingproject.model.ParkingLot;
 import br.com.fcamara.parkingproject.repository.ParkingLotRepository;
+import br.com.fcamara.parkingproject.utils.ConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class ParkingLotService {
+public class ParkingLotService extends ConvertTo {
 
     @Autowired
     ParkingLotRepository parkingLotRepository;

@@ -31,7 +31,7 @@ public class AddressController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<AddressDto> editAddress(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
+    public ResponseEntity<?> editAddress(@PathVariable Long id, @RequestBody @Valid AddressForm form) {
         return addressService.update(id, form);
     }
 

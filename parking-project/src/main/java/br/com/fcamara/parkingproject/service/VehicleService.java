@@ -6,6 +6,7 @@ import br.com.fcamara.parkingproject.controller.form.UpdateVehicleForm;
 import br.com.fcamara.parkingproject.model.Vehicle;
 import br.com.fcamara.parkingproject.repository.ParkingLotRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
+import br.com.fcamara.parkingproject.utils.ConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class VehicleService {
+public class VehicleService extends ConvertTo {
 
     @Autowired
     private VehicleRepository vehicleRepository;
@@ -29,27 +30,20 @@ public class VehicleService {
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
 
         if(vehicle.isPresent()) {
-            return ResponseEntity.ok(new VehicleDto(vehicle.get()));
+            return ResponseEntity.ok(vehicleDto(vehicle.get()));
         }
 
         return ResponseEntity.notFound().build();
     }
 
     public Vehicle create(NewVehicleForm form) {
-
-            return vehicleRepository.save(new Vehicle(
-                    form.getBrand(),
-                    form.getModel(),
-                    form.getColor(),
-                    form.getLicensePlate(),
-                    form.getVehicleType()));
-
+            return vehicleRepository.save(vehicle(form));
     }
 
     public ResponseEntity<VehicleDto> update(Long id, UpdateVehicleForm form) {
-        boolean existsID = vehicleRepository.existsById(id);
+        boolean existsId = vehicleRepository.existsById(id);
 
-        if(existsID) {
+        if(existsId) {
             Vehicle vehicle = vehicleRepository.getById(id);
 
             vehicle.setBrand(form.getBrand());
@@ -57,16 +51,16 @@ public class VehicleService {
             vehicle.setColor(form.getColor());
             vehicle.setLicensePlate(form.getLicensePlate());
 
-            return ResponseEntity.ok(new VehicleDto(vehicle));
+            return ResponseEntity.ok(vehicleDto(vehicle));
         }
 
         return ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<?> delete(Long id) {
-        boolean existsID = vehicleRepository.existsById(id);
+        boolean existsId = vehicleRepository.existsById(id);
 
-        if(existsID) {
+        if(existsId) {
             vehicleRepository.deleteById(id);
             return ResponseEntity.ok().build();
         }

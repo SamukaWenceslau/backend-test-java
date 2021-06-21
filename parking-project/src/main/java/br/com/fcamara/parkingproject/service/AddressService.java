@@ -8,8 +8,7 @@ import br.com.fcamara.parkingproject.model.Company;
 import br.com.fcamara.parkingproject.model.ParkingLot;
 import br.com.fcamara.parkingproject.repository.AddressRepository;
 import br.com.fcamara.parkingproject.repository.CompanyRepository;
-import br.com.fcamara.parkingproject.utils.AddressConvertTo;
-import br.com.fcamara.parkingproject.utils.ParkingLotConvertTo;
+import br.com.fcamara.parkingproject.utils.ConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.Optional;
 
 
 @Service
-public class AddressService {
+public class AddressService extends ConvertTo {
 
     // Repositories
     @Autowired
@@ -31,14 +30,7 @@ public class AddressService {
     @Autowired
     ParkingLotService parkingLotService;
 
-    // Utils
-    private final AddressConvertTo addressConvertTo;
-    private final ParkingLotConvertTo parkingLotConvertTo;
 
-    public AddressService() {
-        this.addressConvertTo = new AddressConvertTo();
-        this.parkingLotConvertTo = new ParkingLotConvertTo();
-    }
 
     public ResponseEntity<CompanyAddressesDto> index(Long id) {
         Optional<Company> company = companyRepository.findById(id);
@@ -55,7 +47,7 @@ public class AddressService {
         Optional<Address> address = addressRepository.findById(id);
 
         if(address.isPresent()) {
-            return ResponseEntity.ok(new AddressDto(address.get()));
+            return ResponseEntity.ok(addressDto(address.get()));
         }
 
         return ResponseEntity.notFound().build();
@@ -68,15 +60,15 @@ public class AddressService {
         Boolean existsZip = addressRepository.existsByZip(form.getZip());
 
         if (company.isPresent() && !existsZip) {
-            Address address = addressConvertTo.convertToAddress(form, company.get());
+            Address address = address(form, company.get());
 
-            ParkingLot parkingLot = parkingLotConvertTo.convertToParkingLot(form, address);
+            ParkingLot parkingLot = parkingLot(form, address);
             parkingLotService.create(parkingLot);
 
             addressRepository.save(address);
             address.setParkingLot(parkingLot);
 
-            return ResponseEntity.ok(addressConvertTo.convertToDto((address)));
+            return ResponseEntity.ok(addressDto((address)));
         }
 
         return ResponseEntity.notFound().build();
@@ -84,7 +76,7 @@ public class AddressService {
     }
 
     // Atualizar -> endereço e patio
-    public ResponseEntity<AddressDto> update(Long id, AddressForm form) {
+    public ResponseEntity<?> update(Long id, AddressForm form) {
         Boolean optional = addressRepository.existsById(id);
 
         if (optional) {
