@@ -30,10 +30,11 @@ public class CompanyService extends ConvertTo {
     }
 
     public ResponseEntity<CompanyDto> create(CompanyForm form) {
-        Boolean existCnpj = companyRepository.existsByCnpj(form.getCnpj());
+        Boolean existsCnpj = companyRepository.existsByCnpj(form.getCnpj());
+        Boolean existsEmail = companyRepository.existsByEmail(form.getEmail());
 
         // Verificar se cnpj, já não está cadastrado
-        if (!existCnpj) {
+        if (!existsCnpj && !existsEmail) {
 
             Company company = company(form);
 
