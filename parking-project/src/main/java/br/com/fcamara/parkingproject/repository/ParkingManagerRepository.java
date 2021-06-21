@@ -18,8 +18,4 @@ public interface ParkingManagerRepository extends JpaRepository<ParkingManager, 
 
      Optional<ParkingManager> findByVehicleAndStatus(Vehicle vehicle, VehicleStatus status);
 
-     @Query(value = "SELECT pm, v FROM ParkingManager pm INNER JOIN Vehicle v ON pm.vehicle = v.id")
-     List<ParkingManager> findAllManagerVehicle();
-
-
 }

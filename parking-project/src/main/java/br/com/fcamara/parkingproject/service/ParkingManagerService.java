@@ -79,7 +79,6 @@ public class ParkingManagerService {
 
     }
 
-
     public ResponseEntity<Object> register(VehicleForm form) {
 
         Optional<Address> address = addressRepository.findByZip(form.getZip());
@@ -87,12 +86,12 @@ public class ParkingManagerService {
 
         if (address.isPresent() && vehicle.isPresent()) {
             if (entranceValidate(address.get(), vehicle.get())) {
-
                 return ResponseEntity.status(created).body(save(address.get(), vehicle.get()));
-
             }
             else {
-
+                return ResponseEntity.status(badRequest)
+                        .body(new ApiException("O veículo já se encontra estacionado. Ou não há mais vagas.",
+                                badRequest));
             }
         }
 
@@ -181,21 +180,20 @@ public class ParkingManagerService {
 
     private boolean hasSpace(Address address, Vehicle vehicle) {
 
-        List<ParkingManager> allManagerVehicle = parkingManagerRepository.findAllManagerVehicle();
-
-        allManagerVehicle
-                .stream()
-                .filter(e -> e.getVehicle().equals(vehicle.getVehicle()) &&
-                        e.getStatus().equals(VehicleStatus.ESTACIONADO) &&
-                        e.getAddress().getId().equals(address.getId())).count();
+        List<ParkingManager> all = parkingManagerRepository
+                .findAll(Specification.where(
+                        SpecificationParkingManager.address(address.getId())
+                                .and(SpecificationParkingManager.vehicleStatus("ESTACIONADO"))
+                        .and(SpecificationParkingManager.vehicleType(vehicle.getVehicle()))
+                        ));
 
         Long carSpaces = address.getParkingLot().getCarSpaces();
         Long motocycleSpaces = address.getParkingLot().getMotocycleSpaces();
 
         if (vehicle.getVehicle().equals(VehicleType.CARRO)) {
-            return (allManagerVehicle.size() == carSpaces.intValue()) ? false : true;
+            return (all.size() == carSpaces.intValue()) ? false : true;
         }else {
-            return (allManagerVehicle.size() == motocycleSpaces.intValue()) ? false : true;
+            return (all.size() == motocycleSpaces.intValue()) ? false : true;
         }
     }
 

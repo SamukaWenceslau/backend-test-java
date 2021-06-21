@@ -38,4 +38,15 @@ public class SpecificationParkingManager {
         };
     }
 
+    public static Specification<ParkingManager> vehicleType(VehicleType type) {
+
+        return new Specification<ParkingManager>() {
+            @Override
+            public Predicate toPredicate(Root<ParkingManager> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                Join<ParkingManager, Vehicle> join = root.join("vehicle");
+                return  criteriaBuilder.equal(join.get("vehicle"), type);
+            }
+        };
+    }
+
 }
