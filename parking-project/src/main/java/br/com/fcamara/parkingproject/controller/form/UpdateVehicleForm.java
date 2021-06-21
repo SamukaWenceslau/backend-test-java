@@ -1,7 +1,5 @@
 package br.com.fcamara.parkingproject.controller.form;
 
-import br.com.fcamara.parkingproject.controller.annotation.EnumTypeIsValid;
-import br.com.fcamara.parkingproject.model.VehicleType;
 import lombok.Getter;
 import lombok.Setter;
 

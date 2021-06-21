@@ -3,8 +3,10 @@ package br.com.fcamara.parkingproject.service;
 import br.com.fcamara.parkingproject.controller.dto.ParkingManagerDto;
 import br.com.fcamara.parkingproject.controller.form.NewVehicleForm;
 import br.com.fcamara.parkingproject.controller.form.VehicleForm;
-import br.com.fcamara.parkingproject.exception.ApiException;
-import br.com.fcamara.parkingproject.model.*;
+import br.com.fcamara.parkingproject.model.Address;
+import br.com.fcamara.parkingproject.model.ParkingManager;
+import br.com.fcamara.parkingproject.model.Vehicle;
+import br.com.fcamara.parkingproject.model.VehicleStatus;
 import br.com.fcamara.parkingproject.repository.AddressRepository;
 import br.com.fcamara.parkingproject.repository.ParkingManagerRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
@@ -20,9 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ParkingManagerService extends ConvertTo {

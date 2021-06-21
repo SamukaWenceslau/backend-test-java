@@ -1,7 +1,5 @@
 package br.com.fcamara.parkingproject.controller.annotation;
 
-import br.com.fcamara.parkingproject.controller.annotation.EnumTypeIsValid;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
