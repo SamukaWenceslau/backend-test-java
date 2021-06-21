@@ -9,6 +9,7 @@ import br.com.fcamara.parkingproject.repository.AddressRepository;
 import br.com.fcamara.parkingproject.repository.ParkingManagerRepository;
 import br.com.fcamara.parkingproject.repository.VehicleRepository;
 import br.com.fcamara.parkingproject.specification.SpecificationParkingManager;
+import br.com.fcamara.parkingproject.utils.ConvertTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ParkingManagerService {
+public class ParkingManagerService extends ConvertTo {
 
     private final HttpStatus created = HttpStatus.CREATED;
     private final HttpStatus notFound = HttpStatus.NOT_FOUND;
@@ -41,6 +42,9 @@ public class ParkingManagerService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private EntranceValidate entranceValidate;
 
 
     public Page<ParkingManagerDto> index(Long id, Pageable page) {
@@ -85,18 +89,18 @@ public class ParkingManagerService {
         Optional<Vehicle> vehicle = vehicleRepository.findByLicensePlate(form.getLicensePlate().toUpperCase());
 
         if (address.isPresent() && vehicle.isPresent()) {
-            if (entranceValidate(address.get(), vehicle.get())) {
+            if (entranceValidate.canPark(address.get(), vehicle.get())) {
                 return ResponseEntity.status(created).body(save(address.get(), vehicle.get()));
             }
             else {
                 return ResponseEntity.status(badRequest)
-                        .body(new ApiException("O veículo já se encontra estacionado. Ou não há mais vagas.",
+                        .body(apiException("O veículo já se encontra estacionado. Ou não há mais vagas.",
                                 badRequest));
             }
         }
 
         return ResponseEntity.status(notFound)
-                .body(new ApiException("Endereço ou veículo invalido.", notFound));
+                .body(apiException("Endereço ou veículo invalido.", notFound));
 
     }
 
@@ -108,21 +112,21 @@ public class ParkingManagerService {
 
             Vehicle vehicle = vehicleService.create(form);
 
-            if (hasSpace(address.get(), vehicle)){
+            if (entranceValidate.hasSpace(address.get(), vehicle)){
 
                 return ResponseEntity.status(created)
                         .body(save(address.get(), vehicle));
             }else{
 
                 return ResponseEntity.status(created)
-                        .body(new ApiException("Veículo cadastrado, porém não foi possivel " +
+                        .body(apiException("Veículo cadastrado, porém não foi possivel " +
                                 "estaciona-lo. Pois não há espaço.", created));
 
             }
         }
 
         return ResponseEntity.status(badRequest)
-                .body(new ApiException("O endereço não foi encontrado. " +
+                .body(apiException("O endereço não foi encontrado. " +
                         "Ou o veículo já está cadastrado.", badRequest));
     }
 
@@ -142,61 +146,23 @@ public class ParkingManagerService {
 
             }else {
                 return ResponseEntity.status(notFound)
-                        .body(new ApiException("Veículo não está estacionado.", notFound));
+                        .body(apiException("Veículo não está estacionado.", notFound));
             }
 
         }
 
             return ResponseEntity.status(notFound)
-                    .body(new ApiException("Veículo não encontrado.", notFound));
+                    .body(apiException("Veículo não encontrado.", notFound));
 
 
     }
-
 
 
     private ParkingManagerDto save(Address address, Vehicle vehicle) {
-        ParkingManager save = parkingManagerRepository.save(new ParkingManager(address, vehicle));
+        ParkingManager save = parkingManagerRepository.save(parkingManager(address, vehicle));
 
-        return new ParkingManagerDto(save);
+        return parkingManagerDto(save);
     }
-
-    private Boolean entranceValidate(Address address, Vehicle vehicle) {
-
-        if(!isParked(vehicle) && hasSpace(address, vehicle)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isParked(Vehicle vehicle) {
-        Optional<ParkingManager> isParked = parkingManagerRepository
-                .findByVehicleAndStatus(vehicle, VehicleStatus.ESTACIONADO);
-
-        return (isParked.isPresent()) ? true : false;
-
-    }
-
-    private boolean hasSpace(Address address, Vehicle vehicle) {
-
-        List<ParkingManager> all = parkingManagerRepository
-                .findAll(Specification.where(
-                        SpecificationParkingManager.address(address.getId())
-                                .and(SpecificationParkingManager.vehicleStatus("ESTACIONADO"))
-                        .and(SpecificationParkingManager.vehicleType(vehicle.getVehicle()))
-                        ));
-
-        Long carSpaces = address.getParkingLot().getCarSpaces();
-        Long motocycleSpaces = address.getParkingLot().getMotocycleSpaces();
-
-        if (vehicle.getVehicle().equals(VehicleType.CARRO)) {
-            return (all.size() == carSpaces.intValue()) ? false : true;
-        }else {
-            return (all.size() == motocycleSpaces.intValue()) ? false : true;
-        }
-    }
-
 
 
 }
