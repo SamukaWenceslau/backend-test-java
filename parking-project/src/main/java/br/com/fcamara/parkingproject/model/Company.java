@@ -1,6 +1,8 @@
 package br.com.fcamara.parkingproject.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -33,6 +35,7 @@ public class Company implements UserDetails {
     private List<Profiles> profiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Address> addresses = new ArrayList<>();
 
     public Company(String name, String email, String password, String cnpj, String tel) {

@@ -1,6 +1,11 @@
 package br.com.fcamara.parkingproject.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -22,7 +27,8 @@ public class ParkingLot {
     @Column(name = "car_spaces")
     private Long carSpaces;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "address_id")
     private Address address;
 

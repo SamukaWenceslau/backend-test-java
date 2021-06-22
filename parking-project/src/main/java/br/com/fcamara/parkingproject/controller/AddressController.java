@@ -38,7 +38,7 @@ public class AddressController {
         return addressService.update(id, form);
     }
 
-    @ApiOperation(value = "Remove um endereço e o patio.")
+    @ApiOperation(value = "Remove um endereço e tudo que estiver associado.")
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> removeAddress(@PathVariable Long id) {

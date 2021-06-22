@@ -62,4 +62,15 @@ public class CompanyService extends ConvertTo {
 
         return ResponseEntity.badRequest().build();
     }
+
+    public ResponseEntity<?> delete(Long id) {
+        boolean existsCompany = companyRepository.existsById(id);
+
+        if (existsCompany) {
+            companyRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 }

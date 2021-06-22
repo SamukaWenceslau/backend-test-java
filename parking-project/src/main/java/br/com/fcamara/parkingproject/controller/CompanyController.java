@@ -37,4 +37,11 @@ public class CompanyController {
     public ResponseEntity<CompanyDto> editCompany(@PathVariable Long id, @RequestBody @Valid CompanyForm form) {
         return companyService.update(id, form);
     }
+
+    @ApiOperation(value = "Remove uma empresa e tudo que estiver associado.")
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> removeCompany(@PathVariable Long id) {
+        return companyService.delete(id);
+    }
 }
