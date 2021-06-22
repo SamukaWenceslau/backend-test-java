@@ -2,6 +2,7 @@ package br.com.fcamara.parkingproject.controller;
 
 import br.com.fcamara.parkingproject.controller.dto.CompanyAddressesDto;
 import br.com.fcamara.parkingproject.service.AddressService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ public class CompanyAddressesController {
     @Autowired
     private AddressService addressService;
 
+    @ApiOperation(value = "Lista as informações dos endereços de uma empresa.")
     @GetMapping("/company/{id}")
     public ResponseEntity<CompanyAddressesDto> listCompanyAddresses(@PathVariable Long id) {
         return addressService.index(id);

@@ -59,7 +59,7 @@ public class ParkingManagerService extends ConvertTo {
             return allParkedVehicle.map(ParkingManagerDto::new);
         }
 
-        return null;
+        throw new IllegalArgumentException("Endereço inválido.");
 
     }
 
@@ -79,7 +79,7 @@ public class ParkingManagerService extends ConvertTo {
             return allParkedVehicle.map(ParkingManagerDto::new);
         }
 
-        return null;
+        throw new IllegalArgumentException("Endereço inválido.");
 
     }
 
@@ -100,7 +100,7 @@ public class ParkingManagerService extends ConvertTo {
         }
 
         return ResponseEntity.status(notFound)
-                .body(apiException("Endereço ou veículo invalido.", notFound));
+                .body(apiException("Endereço ou veículo inválido.", notFound));
 
     }
 
