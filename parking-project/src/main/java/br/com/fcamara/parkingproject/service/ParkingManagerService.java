@@ -47,7 +47,7 @@ public class ParkingManagerService extends ConvertTo {
     private EntranceValidate entranceValidate;
 
 
-    public Page<ParkingManagerDto> index(Long id, Pageable page) {
+    public ResponseEntity<?> index(Long id, Pageable page) {
 
         boolean existsAddress = addressRepository.existsById(id);
 
@@ -56,14 +56,14 @@ public class ParkingManagerService extends ConvertTo {
                     .findAll(Specification.where(SpecificationParkingManager.address(id)), page);
 
 
-            return allParkedVehicle.map(ParkingManagerDto::new);
+            return ResponseEntity.ok(allParkedVehicle.map(ParkingManagerDto::new));
         }
 
-        throw new IllegalArgumentException("Endereço inválido.");
+        return ResponseEntity.notFound().build();
 
     }
 
-    public Page<ParkingManagerDto> index(Long id, Pageable page, String status) {
+    public ResponseEntity<?> index(Long id, Pageable page, String status) {
 
         boolean existsAddress = addressRepository.existsById(id);
 
@@ -76,10 +76,10 @@ public class ParkingManagerService extends ConvertTo {
                             , page);
 
 
-            return allParkedVehicle.map(ParkingManagerDto::new);
+            return ResponseEntity.ok(allParkedVehicle.map(ParkingManagerDto::new));
         }
 
-        throw new IllegalArgumentException("Endereço inválido.");
+       return ResponseEntity.notFound().build();
 
     }
 

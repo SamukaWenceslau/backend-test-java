@@ -24,7 +24,7 @@ public class ParkingManagerController {
 
     @ApiOperation(value = "Lista todos os veículos que estacionaram ou estão estacionados no endereço.")
     @GetMapping("/address/{id}")
-    public Page<ParkingManagerDto> list(@PathVariable Long id,
+    public ResponseEntity<?> list(@PathVariable Long id,
                                         @RequestParam(required = false) String status,
                                         @PageableDefault(sort = "entrance", direction = Sort.Direction.ASC)
                                         Pageable page) {
